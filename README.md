@@ -61,7 +61,7 @@ The next library is associated with the Adafruit itself. Search for ‘adafruit 
 
 After making the proper connections and installing the necessary libraries as mentioned above, we will now see how to read the humidity and temperature data from DHT11 Sensor using ESP32 and display the result on the Serial Monitor.
 
-### Code
+### Code for displaying the temp and humidity
 This is a simple code which will assign pin 16 (RX2) from the picture above to DHT11 Sensor, initialize the DHT11 Sensor and reads the humidity and temperature data from the sensor.
 
 To view the result, simply use the serial monitor to print the temperature values in % for Humidity and degree Celsius for temperature.
@@ -96,3 +96,29 @@ We can now see in the Serial Monitor the temperature and the humidity.
 
 ![serial monitor sensor](/img/temperature_serial_monitor.jpg)
 
+## Networking
+
+### Enabling Wifi
+
+To enable wifi we are goinf to use the default built-in libraries for ESP32
+
+```
+#include <WiFi.h>
+#include <WiFiMulti.h>
+
+
+#include <HTTPClient.h>
+#include <WiFiClientSecure.h>
+
+WiFiMulti WiFiMulti;
+```
+
+Then for testing need to create a sample GET request over HTTPS. The code is in [/src/dht11-webhook.ino](/src/dht11-webhook.ino) folder. Make sure to update your variables for wifi name and password in
+
+```
+  WiFiMulti.addAP("<SSID_NAME>", "<WIFI_PASSWORD>");
+```
+
+After you have prepared the file and sent to the ESP32 you would see  something like this in the http://web.hook/ site and on the terminal
+
+![esp32_webhook](/img/esp32-send-webhook.png)
