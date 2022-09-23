@@ -44,3 +44,55 @@ We are going to use Arduino studio to build the software layer for this project.
 - Post this data on a message broker or a HTTP POST for long term retention.
 - (Optional) build a graph for example with Grafana to visualize the historical data.
 
+## Preparing Arduino IDE
+We need to download a couple of libraries so that ESP32 will properly communicate with DHT11 Sensor. First is main DHT11 Sensor Library. Go to Tools -> Manage Libraries… in Arduino IDE.
+
+![ESP32-DHT11-Arduino-1](img/ESP32-DHT11-Arduino-1.jpg)
+
+In the search bar, enter ‘dht’. Scroll through the options and install ‘DHT sensor library’ by Adafruit.
+
+![ESP32-DHT11-Arduino-2](img/ESP32-DHT11-Arduino-2.jpg)
+
+The next library is associated with the Adafruit itself. Search for ‘adafruit unified’, scroll down and install ‘Adafruit Unified Sensor’ library.
+
+![ESP32-DHT11-Arduino-3](img/ESP32-DHT11-Arduino-3.jpg)
+
+### Displaying Humidity and Temperature on Serial Monitor
+
+After making the proper connections and installing the necessary libraries as mentioned above, we will now see how to read the humidity and temperature data from DHT11 Sensor using ESP32 and display the result on the Serial Monitor.
+
+### Code
+This is a simple code which will assign pin 16 (RX2) from the picture above to DHT11 Sensor, initialize the DHT11 Sensor and reads the humidity and temperature data from the sensor.
+
+To view the result, simply use the serial monitor to print the temperature values in % for Humidity and degree Celsius for temperature.
+
+```arduino
+#include "DHT.h"
+#define DHT11PIN 16
+
+DHT dht(DHT11PIN, DHT11);
+void setup()
+{
+  
+  Serial.begin(115200);
+/* Start the DHT11 Sensor */
+  dht.begin();
+}
+
+void loop()
+{
+  float humi = dht.readHumidity();
+  float temp = dht.readTemperature();
+  Serial.print("Temperature: ");
+  Serial.print(temp);
+  Serial.print("ºC ");
+  Serial.print("Humidity: ");
+  Serial.println(humi);
+  delay(1000);
+}
+```
+
+We can now see in the Serial Monitor the temperature and the humidity.
+
+![serial monitor sensor](/img/temperature_serial_monitor.jpg)
+
