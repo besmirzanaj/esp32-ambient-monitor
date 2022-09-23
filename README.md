@@ -113,12 +113,16 @@ To enable wifi we are goinf to use the default built-in libraries for ESP32
 WiFiMulti WiFiMulti;
 ```
 
-Then for testing need to create a sample GET request over HTTPS. The code is in [/src/dht11-webhook.ino](/src/dht11-webhook.ino) folder. Make sure to update your variables for wifi name and password in
+Then for testing need to create a sample GET request over HTTPS. The code is in [/src/dht11-webhook.ino](/src/dht11-webhook.ino) folder. 
+
+We are going to use [Webhook.site](https://docs.webhook.site/index.html) to send test GET requests and validate the results of our requests from ESP32 in that website.
+
+Make sure to update your variables for wifi name and password in this line.
 
 ```
   WiFiMulti.addAP("<SSID_NAME>", "<WIFI_PASSWORD>");
 ```
 
-After you have prepared the file and sent to the ESP32 you would see  something like this in the http://web.hook/ site and on the terminal
+After you have prepared the file and sent to the ESP32 you would see something like this in the https://webhook.site/ site and on the serial monitor.
 
 ![esp32_webhook](/img/esp32-send-webhook.png)
