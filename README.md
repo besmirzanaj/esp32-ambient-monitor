@@ -64,7 +64,7 @@ After making the proper connections and installing the necessary libraries as me
 ### Code for displaying the temp and humidity
 This is a simple code which will assign pin 16 (RX2) from the picture above to DHT11 Sensor, initialize the DHT11 Sensor and reads the humidity and temperature data from the sensor.
 
-To view the result, simply use the serial monitor to print the temperature values in % for Humidity and degree Celsius for temperature.
+To view the result, simply use the serial monitor to print the temperature values in % for Humidity and degree Celsius for temperature. The code is also [here](/src/dht11-serial-monitor.ino).
 
 ```arduino
 #include "DHT.h"

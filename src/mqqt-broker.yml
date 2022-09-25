@@ -1,0 +1,105 @@
+# docker version
+# docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sensors
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: sensors
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq:3-alpine
+        imagePullPolicy: Always
+        image: rabbitmq
+        #args: ["--appendonly", "yes"]
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: rabitmq-database-dir
+          mountPath: /var/lib/rabbitmq
+          subPath: 
+      volumes:
+      - name: rabitmq-database-dir
+        persistentVolumeClaim:
+          claimName: rabbitmq
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabitmq
+  namespace: sensors
+stringData:
+  RABBITMQ_DEFAULT_PASS: "password"
+  RABBITMQ_DEFAULT_USER: "admin"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rabitmq-database-dir
+  namespace: sensors
+  labels:
+    app: rabitmq
+spec:
+ # storageClassName: "longhorn-crypto-per-volume"
+  accessModes: 
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 250Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: rabbitmq
+    kubernetes.io/name: "rabbitmq"
+  name: rabbitmq
+  namespace: sensors
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+  - name: rabbitmq
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rabbitmq
+  namespace: sensors
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: rabbitmq.cloud.albania
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask
+            port:
+              number: 5000
